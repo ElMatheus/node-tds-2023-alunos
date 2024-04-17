@@ -10,7 +10,6 @@ export default class UsersRepository {
       console.log(allUsers);
       return allUsers;
     } catch (error) {
-      console.error("Failed to get all users", error);
       throw error;
     }
   }
@@ -21,17 +20,6 @@ export default class UsersRepository {
       console.log(user);
       return user;
     } catch (error) {
-      console.error(`Failed to get user by id ${id}`, error);
-      throw error;
-    }
-  }
-
-  async getUserByEmail(email) {
-    try {
-      const user = await this.pg.oneOrNone("SELECT * FROM users WHERE email = $1", email);
-      return user;
-    } catch (error) {
-      console.error("Failed to get user by email", error);
       throw error;
     }
   }
@@ -46,14 +34,12 @@ export default class UsersRepository {
       ]);
       return user;
     } catch (error) {
-      console.error("Failed to create user", error);
       throw error;
     }
   }
-
   async updateUser(id, name, email, password) {
     try {
-      const user = await this.getUserById(id);
+      const user = this.getUserById(id);
 
     if (!user) {
       return null;
@@ -66,16 +52,24 @@ export default class UsersRepository {
 
     return updateUser;
     } catch (error) {
-      console.error("Failed to update user", error);
       throw error;
     }
   }
+
+  async getUserByEmail(email) {
+    try {
+      const user = await this.pg.oneOrNone("SELECT * FROM users WHERE email = $1", email);
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
   async deleteUser(id) {
     try {
       await this.pg.none("DELETE FROM users WHERE id = $1", id);
     } catch (error) {
-      console.error("Failed to delete user", error);
       throw error;
     }
   }

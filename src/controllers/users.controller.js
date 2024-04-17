@@ -50,7 +50,7 @@ export const createUser = async (req, res) => {
 
     await usersRepository.createUser(user);
 
-    return res.status(201).send({ message: "Usuário criado com sucesso", user });
+    return res.status(201).send(user);
   } catch (error) {
     return res.status(500).send({ message: "Erro ao criar usuário", error: error.message });
   }
